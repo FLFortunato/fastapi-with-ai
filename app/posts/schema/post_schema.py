@@ -1,8 +1,7 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
-
-from app.comments.model.comment import Comment
-from app.users.model.user import User
+from pydantic import BaseModel
+from typing import List
+from app.comments.schema.comment_schema import CommentOut
+from app.users.schemas.user import UserOutput
 
 
 class CreatePost(BaseModel):
@@ -13,8 +12,11 @@ class CreatePost(BaseModel):
 
 class OutputPost(BaseModel):
     content: str
-    user: User
-    comments: List[Comment]
+    user: UserOutput
+    comments: List[CommentOut]
+
+    class Config:
+        orm_mode = True
 
 
 class UpdatePost(BaseModel):

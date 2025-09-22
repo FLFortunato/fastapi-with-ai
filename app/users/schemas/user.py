@@ -14,6 +14,11 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
 
 
+class UserOutput(BaseModel):
+    name: str
+    email: str
+    
+
 class UserRead(BaseModel):
     id: int
     email: EmailStr
