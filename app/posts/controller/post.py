@@ -1,15 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Depends
+
 from app.db.session import get_db
 from app.posts.model.post import Post
 from app.posts.schema.post_schema import CreatePost, OutputPost, UpdatePost
 from app.posts.use_cases.create_post_use_case import CreatePostUseCase
 from app.posts.use_cases.delete_post_use_case import DeletePostUseCase
 from app.posts.use_cases.get_all_posts_use_case import GetAllPostsUseCase
+from app.posts.use_cases.get_many_posts_use_case import get_many_posts_use_case
 from app.posts.use_cases.get_post_by_id_use_case import GetPostByIdUseCase
 from app.posts.use_cases.update_post_use_case import UpdatePostUseCase
-
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
@@ -44,3 +44,9 @@ async def updatePost(
 async def deletePost(id: int, db: AsyncSession = Depends(get_db)) -> None:
     use_case = DeletePostUseCase()
     return await use_case.execute(db, id)
+
+
+@router.get("/many/posts")
+async def getManyPosts():
+
+    return await get_many_posts_use_case()
