@@ -1,9 +1,9 @@
 from fastapi import HTTPException
-from app.users.schemas.user import UserCreate
-from app.users.repository.user import UserRepository
+from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError, DataError
 
+from app.users.repository.user import UserRepository
+from app.users.schemas.user import UserCreate
 from app.utils.security import hash_password
 
 
@@ -12,10 +12,10 @@ class CreateUserUseCase:
     @staticmethod
     async def execute(db: AsyncSession, user_create: UserCreate):
         try:
-            data = user_create.model_dump()
+            data: dict = user_create.model_dump()
 
             hashedPassword = await hash_password(data["password"])
-
+            
             data["password"] = hashedPassword
             return await UserRepository.create(db, UserCreate(**data))
         except IntegrityError:

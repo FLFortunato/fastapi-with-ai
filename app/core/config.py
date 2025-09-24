@@ -1,5 +1,6 @@
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
 
 # Carrega variáveis do .env
 load_dotenv()
@@ -9,3 +10,8 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 POSTGRES_DB = os.getenv("POSTGRES_DB")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST")
 POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", 5432))
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+ALGORITHM = os.getenv("ALGORITHM")
+REFRESH_TOKEN_EXPIRE_DAYS = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
+REFRESH_JWT_SECRET_KEY = os.getenv("REFRESH_JWT_SECRET_KEY")

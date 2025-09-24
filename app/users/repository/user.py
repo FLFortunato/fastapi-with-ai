@@ -25,6 +25,11 @@ class UserRepository:
         return result.scalar_one_or_none()
 
     @staticmethod
+    async def get_by_email(db: AsyncSession, email: str) -> User | None:
+        result = await db.execute(select(User).where(User.email == email))
+        return result.scalar_one_or_none()
+
+    @staticmethod
     async def update(db: AsyncSession, db_user: User, user_update: UserUpdate) -> User:
         for field, value in user_update.model_dump(exclude_unset=True).items():
             setattr(db_user, field, value)

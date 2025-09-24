@@ -1,7 +1,9 @@
-from app.db.session import Base
-from sqlalchemy import String, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
+
+from sqlalchemy import Boolean, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.session import Base
 
 
 class User(Base):
@@ -11,6 +13,8 @@ class User(Base):
     lastName: Mapped[str] = mapped_column(String(50), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String, nullable=False)
+    role: Mapped[str] = mapped_column(String, nullable=True, default="developer")
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     posts: Mapped[List["Post"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
