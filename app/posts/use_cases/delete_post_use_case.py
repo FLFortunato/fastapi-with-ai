@@ -1,29 +1,31 @@
+from fastapi import HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.posts.repository.post_repository import PostRepository
-from sqlalchemy.exc import SQLAlchemyError
-from fastapi import HTTPException, status
 
 
 class DeletePostUseCase:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.postRepo = PostRepository(db)
 
-    @staticmethod
     async def execute(
-        db: AsyncSession,
+        self,
         id: int,
     ):
         try:
-            result = await PostRepository.delete(db, id)
+            result = await self.postRepo.delete(id)
             if result == 0:
-                await db.rollback()
+                await self.db.rollback()
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, detail="Post not found"
                 )
 
-            await db.commit()
+            await self.db.commit()
 
         except SQLAlchemyError as e:
-            await db.rollback()
+            await self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",

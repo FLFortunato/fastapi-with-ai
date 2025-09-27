@@ -1,21 +1,24 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.comments.model.comment import Comment
-from typing import List
-from sqlalchemy.exc import DataError
-from sqlalchemy.exc import SQLAlchemyError
-from fastapi import HTTPException
-from app.comments.repository.comment_repository import CommentRepository
 import logging
+from typing import List
+
+from fastapi import HTTPException
+from sqlalchemy.exc import DataError, SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.comments.model.comment import Comment
+from app.comments.repository.comment_repository import CommentRepository
 
 logger = logging.getLogger(__name__)
 
 
 class GetAllCommentsUseCase:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.commentRepo = CommentRepository(db)
 
-    @staticmethod
-    async def execute(db: AsyncSession) -> List[Comment]:
+    async def execute(self) -> List[Comment]:
         try:
-            results = await CommentRepository.getAll(db)
+            results = await self.commentRepo.getAll()
             return results
         except DataError as e:
             logger.error(f"Database error: {e}")

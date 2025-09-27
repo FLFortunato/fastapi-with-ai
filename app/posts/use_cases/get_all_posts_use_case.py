@@ -1,17 +1,21 @@
-from fastapi import HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
+
+from fastapi import HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.posts.model.post import Post
 from app.posts.repository.post_repository import PostRepository
-from sqlalchemy.exc import SQLAlchemyError
 
 
 class GetAllPostsUseCase:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.postRepo = PostRepository(db)
 
-    @staticmethod
-    async def execute(db: AsyncSession) -> List[Post]:
+    async def execute(self) -> List[Post]:
         try:
-            results = await PostRepository.getAll(db)
+            results = await self.postRepo.getAll()
             return results
         except SQLAlchemyError as e:
             raise HTTPException(

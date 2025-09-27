@@ -1,14 +1,19 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.users.model.user import User
 from app.users.repository.user import UserRepository
 
 
 class GetUserByEmailUseCase:
-    @staticmethod
-    async def execute(email: str, db: AsyncSession) -> User:
+
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.userRepo = UserRepository(db)
+
+    async def execute(self, email: str) -> User:
         try:
-            user = await UserRepository.get_by_email(db, email)
+            user = await self.userRepo.get_by_email(email)
             if not user:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,

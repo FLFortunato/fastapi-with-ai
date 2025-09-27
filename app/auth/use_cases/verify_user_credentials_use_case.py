@@ -12,7 +12,8 @@ class VerifyUserCredentialsUseCase:
     @staticmethod
     async def execute(email: str, password: str, db: AsyncSession) -> Optional[User]:
         try:
-            user = await GetUserByEmailUseCase.execute(email, db)
+            use_case = GetUserByEmailUseCase(db)
+            user = await use_case.execute(email, db)
 
             is_valid = await verify_password(password, user.password)
 

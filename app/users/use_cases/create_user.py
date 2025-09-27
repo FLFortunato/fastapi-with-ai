@@ -9,18 +9,21 @@ from app.utils.security import hash_password
 
 class CreateUserUseCase:
 
-    @staticmethod
-    async def execute(db: AsyncSession, user_create: UserCreate):
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.userRepo = UserRepository(db)
+
+    async def execute(self, user_create: UserCreate):
         try:
             data: dict = user_create.model_dump()
 
             hashedPassword = await hash_password(data["password"])
-            
+
             data["password"] = hashedPassword
-            return await UserRepository.create(db, UserCreate(**data))
+            return await self.userRepo.create(UserCreate(**data))
         except IntegrityError:
-            await db.rollback()
+            await self.db.rollback()
             raise HTTPException(status_code=400, detail="Email already exists")
         except DataError as e:
-            await db.rollback()
+            await self.db.rollback()
             raise HTTPException(status_code=400, detail=str(e))

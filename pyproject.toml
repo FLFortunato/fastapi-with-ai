@@ -12,8 +12,15 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "psycopg2-binary>=2.9.10",
     "pyjwt>=2.10.1",
+    "pytest>=8.4.2",
     "python-dotenv>=1.1.1",
     "sqlalchemy[asyncio]>=2.0.43",
 ]
 [uv]
 start = "uvicorn app.main:app --reload"
+
+[project.scripts]
+start = "uvicorn app.main:app --reload"
+dev = "fastapi dev app/main.py"
+test = "pytest -v"
+lint = "ruff check ."

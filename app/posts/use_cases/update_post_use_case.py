@@ -1,16 +1,19 @@
+from fastapi import HTTPException, status
+from sqlalchemy.exc import DataError, IntegrityError, SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.posts.repository.post_repository import PostRepository
 from app.posts.schema.post_schema import UpdatePost
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError, DataError
-from fastapi import HTTPException, status
 
 
 class UpdatePostUseCase:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.postRepo = PostRepository(db)
 
-    @staticmethod
-    async def execute(db: AsyncSession, post: UpdatePost, id: int):
+    async def execute(self, post: UpdatePost, id: int):
         try:
-            result = await PostRepository.update(db, id, post)
+            result = await self.postRepo.update(id, post)
             return result
         except IntegrityError:
             raise HTTPException(
@@ -21,7 +24,7 @@ class UpdatePostUseCase:
         except SQLAlchemyError as e:
             raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
         except Exception as e:
-            await db.rollback()
+            await self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Unexpected error: {str(e)}",
