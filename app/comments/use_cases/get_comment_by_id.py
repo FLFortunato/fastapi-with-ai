@@ -18,7 +18,7 @@ class GetCommentByIdUseCase:
 
     async def execute(self, id: int) -> Comment | None:
         try:
-            result = await self.commentRepo.getById(id)
+            result = await self.commentRepo.get_by_id(id)
             if not result:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,

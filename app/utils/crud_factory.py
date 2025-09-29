@@ -25,7 +25,7 @@ class CrudFactory(Generic[ModelType, CreateSchemaType, UpdateSchemaModel]):
         results = await self.db.execute(select(self.model))
         return list(results.scalars().all())
 
-    async def getById(self, id: int) -> ModelType | None:
+    async def get_by_id(self, id: int) -> ModelType | None:
         result = await self.db.execute(select(self.model).where(self.model.id == id))
         return result.scalar_one_or_none()
 

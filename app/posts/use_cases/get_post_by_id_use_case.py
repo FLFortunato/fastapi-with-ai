@@ -14,7 +14,7 @@ class GetPostByIdUseCase:
 
     async def execute(self, id: int) -> Post | None:
         try:
-            result = await self.postRepo.getById(id)
+            result = await self.postRepo.get_by_id(id)
 
             if not result:
                 raise HTTPException(
