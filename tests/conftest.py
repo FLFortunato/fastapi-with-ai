@@ -1,10 +1,14 @@
 import asyncio
 
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+import pytest_asyncio
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
-from app.db.session import Base, get_db  # sua função de dependência
+from app.comments.model.comment import Comment
+from app.db.session import Base
+from app.posts.model.post import Post
+from app.users.model.user import User
 
 DATABASE_URL_TEST = "sqlite+aiosqlite:///:memory:"  # banco só em memória
 
@@ -14,15 +18,12 @@ AsyncSessionTest = async_sessionmaker(engine_test, expire_on_commit=False)
 
 
 # Fixture do banco (setup/teardown)
-@pytest.fixture(scope="function")
+@pytest_asyncio.fixture
 async def db_session():
-    async with engine_test.begin() as conn:
-        # cria tabelas antes do teste
+    async with engine_test.connect() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    async with AsyncSessionTest() as session:
-        yield session
-    async with engine_test.begin() as conn:
-        # dropa tabelas depois do teste (limpeza)
+        async with AsyncSessionTest(bind=conn) as session:
+            yield session
         await conn.run_sync(Base.metadata.drop_all)
 
 
