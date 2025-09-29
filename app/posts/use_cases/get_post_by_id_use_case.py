@@ -1,15 +1,20 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.posts.model.post import Post
 from app.posts.repository.post_repository import PostRepository
-from fastapi import HTTPException, status
 
 
 class GetPostByIdUseCase:
-    @staticmethod
-    async def execute(db: AsyncSession, id: int) -> Post | None:
+
+    def __init__(self, db: AsyncSession):
+        self.db = db
+        self.postRepo = PostRepository(db)
+
+    async def execute(self, id: int) -> Post | None:
         try:
-            result = await PostRepository.getById(db, id)
+            result = await self.postRepo.getById(id)
 
             if not result:
                 raise HTTPException(

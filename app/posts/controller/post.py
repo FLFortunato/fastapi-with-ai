@@ -16,34 +16,34 @@ router = APIRouter(prefix="/posts", tags=["Posts"])
 
 @router.get("/")
 async def getAllPosts(db: AsyncSession = Depends(get_db)):
-    use_case = GetAllPostsUseCase()
-    return await use_case.execute(db)
+    use_case = GetAllPostsUseCase(db)
+    return await use_case.execute()
 
 
 @router.get("/{post_id}")
 async def getPostById(id: int, db: AsyncSession = Depends(get_db)):
-    use_case = GetPostByIdUseCase()
-    return await use_case.execute(db, id)
+    use_case = GetPostByIdUseCase(db)
+    return await use_case.execute(id)
 
 
 @router.post("/", response_model=OutputPost)
 async def createPost(post: CreatePost, db: AsyncSession = Depends(get_db)):
-    use_case = CreatePostUseCase()
-    return await use_case.execute(db, post)
+    use_case = CreatePostUseCase(db)
+    return await use_case.execute(post)
 
 
 @router.put("/{post_id}")
 async def updatePost(
     post: UpdatePost, post_id: int, db: AsyncSession = Depends(get_db)
 ):
-    use_case = UpdatePostUseCase()
-    return await use_case.execute(db, post, post_id)
+    use_case = UpdatePostUseCase(db)
+    return await use_case.execute(post, post_id)
 
 
 @router.delete("/{post_id}")
 async def deletePost(id: int, db: AsyncSession = Depends(get_db)) -> None:
-    use_case = DeletePostUseCase()
-    return await use_case.execute(db, id)
+    use_case = DeletePostUseCase(db)
+    return await use_case.execute(id)
 
 
 @router.get("/many/posts")

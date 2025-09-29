@@ -16,11 +16,11 @@ router = APIRouter(
 
 @router.post("/")
 async def createUser(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    use_case = CreateUserUseCase()
-    return await use_case.execute(db, user)
+    use_case = CreateUserUseCase(db)
+    return await use_case.execute(user)
 
 
 @router.get("/{user_id}", response_model=UserOutput)
 async def getUserById(user_id: int, db: AsyncSession = Depends(get_db)):
-    use_case = GetUseByIdUseCase()
-    return await use_case.execute(db, user_id)
+    use_case = GetUseByIdUseCase(db)
+    return await use_case.execute(user_id)

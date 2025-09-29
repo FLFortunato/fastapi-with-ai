@@ -5,15 +5,27 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aiosqlite>=0.21.0",
     "alembic>=1.16.5",
     "asyncpg>=0.30.0",
     "fastapi[standard]>=0.117.1",
     "httpx>=0.28.1",
+    "langchain[google,google-genai,openai]>=0.3.27",
+    "langgraph>=0.6.7",
+    "langsmith>=0.4.31",
     "passlib[bcrypt]>=1.7.4",
     "psycopg2-binary>=2.9.10",
     "pyjwt>=2.10.1",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
     "python-dotenv>=1.1.1",
     "sqlalchemy[asyncio]>=2.0.43",
 ]
 [uv]
 start = "uvicorn app.main:app --reload"
+
+[project.scripts]
+start = "uvicorn app.main:app --reload"
+dev = "fastapi dev app/main.py"
+test = "pytest -v"
+lint = "ruff check ."
