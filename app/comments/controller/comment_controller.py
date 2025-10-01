@@ -15,7 +15,7 @@ from app.db.session import get_db
 router = APIRouter(
     prefix="/comments",
     tags=["Comments"],
-    dependencies=[Depends(ValidateAuthentication.execute)],
+    # dependencies=[Depends(ValidateAuthentication.execute)],
 )
 
 

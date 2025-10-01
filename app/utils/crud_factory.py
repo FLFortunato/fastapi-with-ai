@@ -26,7 +26,9 @@ class CrudFactory(Generic[ModelType, CreateSchemaType, UpdateSchemaModel]):
         return list(results.scalars().all())
 
     async def get_by_id(self, id: int) -> ModelType | None:
-        result = await self.db.execute(select(self.model).where(self.model.id == id))
+        result = await self.db.execute(
+            select(self.model).where(getattr(self.model, "id") == id)
+        )
         return result.scalar_one_or_none()
 
     async def handle_update(self, id: int, post: UpdateSchemaModel) -> ModelType | None:

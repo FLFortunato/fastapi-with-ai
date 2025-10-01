@@ -1,0 +1,13 @@
+{
+    "graphs": {
+        "comments_agent": "app/ai/agents/comments_agent/comment_agent.py:comment_agent_graph",
+        "supervisor": "app/ai/agents/supervisor/supervisor.py:supervisor_graph"
+    },
+    "agents": [
+        "app/ai/agents"
+    ],
+    "env": ".env",
+    "dependencies": [
+        "."
+    ]
+}

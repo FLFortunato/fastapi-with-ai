@@ -1,10 +1,10 @@
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
 
 
 class CreateComment(BaseModel):
-    title: str
-    comment: str
+    content: str
     user_id: int
     post_id: int
 
