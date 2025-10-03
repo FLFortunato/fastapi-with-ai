@@ -11,6 +11,7 @@ dependencies = [
     "fastapi[standard]>=0.117.1",
     "httpx>=0.28.1",
     "ipython>=9.6.0",
+    "langchain-google-vertexai>=2.0.22",
     "langchain-tavily>=0.2.11",
     "langchain[google,google-genai,openai]>=0.3.27",
     "langgraph>=0.6.7",

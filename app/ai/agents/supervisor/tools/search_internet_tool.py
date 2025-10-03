@@ -36,8 +36,8 @@ async def search_internet(input: str):
 
     print("[search_internet]: Executing tool...")
     tavily_search_tool = TavilySearch(
-        max_results=5,
-        topic="general", 
+        max_results=1,
+        topic="general",
         include_answer=True,
         include_raw_content="markdown",
         include_images=False,

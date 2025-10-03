@@ -1,3 +1,4 @@
+import json
 from typing import Callable
 
 from langchain_core.runnables import RunnableConfig
@@ -14,7 +15,6 @@ def add_human_in_the_loop(
 ) -> BaseTool:
     """Wrap a tool to support human-in-the-loop review."""
 
-    print("==================", isinstance(tool, BaseTool))
     if not isinstance(tool, BaseTool):
         tool = create_tool(tool)
 
@@ -26,26 +26,31 @@ def add_human_in_the_loop(
         }
 
     @create_tool(tool.name, description=tool.description, args_schema=tool.args_schema)
-    def call_tool_with_interrupt(config: RunnableConfig, **tool_input):
+    async def call_tool_with_interrupt(config: RunnableConfig, **tool_input):
         request: HumanInterrupt = {
             "action_request": {"action": tool.name, "args": tool_input},
             "config": interrupt_config,
             "description": "Please review the tool call",
         }
-        response = interrupt([request])[0]
+        response = interrupt(request)
+
+        formatted_response = json.loads(response)
         # approve the tool call
-        if response["type"] == "accept":
-            tool_response = tool.invoke(tool_input, config)
+        print(formatted_response["action_request"] == "accept")
+        if formatted_response["action_request"] == "accept":
+            tool_response = await tool.ainvoke(tool_input, config)
         # update tool call args
-        elif response["type"] == "edit":
-            tool_input = response["args"]["args"]
-            tool_response = tool.invoke(tool_input, config)
+        elif formatted_response["action_request"] == "edit":
+            tool_input = formatted_response["args"]["args"]
+            tool_response = await tool.ainvoke(tool_input, config)
         # respond to the LLM with user feedback
-        elif response["type"] == "response":
-            user_feedback = response["args"]
+        elif formatted_response["action_request"] == "response":
+            user_feedback = formatted_response["args"]
             tool_response = user_feedback
         else:
-            raise ValueError(f"Unsupported interrupt response type: {response['type']}")
+            raise ValueError(
+                f"Unsupported interrupt response action_request: {formatted_response['action_request']}"
+            )
 
         return tool_response
 

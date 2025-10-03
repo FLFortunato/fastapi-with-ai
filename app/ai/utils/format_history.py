@@ -3,7 +3,7 @@ from typing import List, Union
 from langchain.schema import AIMessage, HumanMessage
 
 
-async def format_history_msgs(msgs: List[Union[HumanMessage, AIMessage]]) -> str:
+def format_history_msgs(msgs: List[Union[HumanMessage, AIMessage]]) -> str:
     conversation_text = ""
     for msg in msgs:
         role = "Usuário" if isinstance(msg, HumanMessage) else "Assistente"
