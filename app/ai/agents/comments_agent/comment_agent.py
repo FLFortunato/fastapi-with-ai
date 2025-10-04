@@ -155,4 +155,4 @@ graph_builder.add_conditional_edges("comment_agent", route_after_llm)
 graph_builder.add_edge("run_tool", "comment_agent")
 graph_builder.add_edge("comment_agent", END)
 
-comment_agent_graph = graph_builder.compile(checkpointer=memory)
+comment_agent_graph = graph_builder.compile()

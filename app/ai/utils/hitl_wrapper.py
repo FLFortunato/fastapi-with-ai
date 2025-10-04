@@ -34,7 +34,9 @@ def add_human_in_the_loop(
         }
         response = interrupt(request)
 
-        formatted_response = json.loads(response)
+        formatted_response = (
+            json.loads(response) if isinstance(response, str) else response
+        )
         # approve the tool call
         print(formatted_response["action_request"] == "accept")
         if formatted_response["action_request"] == "accept":

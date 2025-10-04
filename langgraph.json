@@ -1,7 +1,8 @@
 {
     "graphs": {
         "comments_agent": "app/ai/agents/comments_agent/comment_agent.py:comment_agent_graph",
-        "supervisor": "app/ai/agents/supervisor/supervisor.py:supervisor_graph"
+        "supervisor": "app/ai/agents/supervisor/supervisor.py:supervisor_graph",
+        "general_subject_agent": "app/ai/agents/general_subject_agent/general_subject_agent.py:general_subject_agent_compiled"
     },
     "agents": [
         "app/ai/agents"

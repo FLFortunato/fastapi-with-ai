@@ -50,11 +50,6 @@ def prompt(state: AgentState, config: RunnableConfig) -> list[AnyMessage]:
 async def summarize_node(state: State):
     messages = state["messages"]
 
-    print(
-        "============================TESTE=====================",
-        messages,
-        len(messages),
-    )
     if len(messages) <= 5:
         return {"messages": messages}
 
@@ -70,7 +65,7 @@ async def summarize_node(state: State):
     new_messages = [
         SystemMessage(content=summary["messages"][-1].content)
     ] + last_messages
-    print("===============FEZ RESUMO=========", len(new_messages))
+
     return {"messages": new_messages}
 
 
